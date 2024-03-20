@@ -6,21 +6,21 @@ spring:
         name: apigateway
     cloud:
         gateway:
+            discovery:
+                locator:
+                    enabled: true
             routes:
                  - id: users-service
-                   uri: http://localhost:8585
+                   uri: lb://apicriptografia-usuarios
                    predicates:
                        - Path=/users/**
-                 - id: roles-service
-                   uri: http://localhost:8585
-                   predicates:
                        - Path=/roles/**
-                 - id: permissions-service
-                   uri: http://localhost:8585
-                   predicates:
                        - Path=/permissions/**
-                       
                  - id: encryptions-service
-                   uri: http://localhost:8282
+                   uri: lb://apicriptografia-encriptacion
                    predicates:
                        - Path=/encryptions/**
+eureka:    
+    client:
+        serviceUrl:
+            defaultZone: http://localhost:8761/eureka/
