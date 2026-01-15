@@ -2,25 +2,44 @@ server:
     port: 8989
 
 spring:
-    application:
-        name: apigateway
     cloud:
         gateway:
-            discovery:
-                locator:
-                    enabled: true
             routes:
-                 - id: users-service
-                   uri: lb://apicriptografia-usuarios
-                   predicates:
-                       - Path=/users/**
-                       - Path=/roles/**
-                       - Path=/permissions/**
-                 - id: encryptions-service
-                   uri: lb://apicriptografia-encriptacion
-                   predicates:
-                       - Path=/encryptions/**
+              - id: users-service
+                uri: lb://users-service
+                predicates:
+                  - Path=/api/v1/users/**
+              
+              - id: crypto-service
+                uri: lb://crypto-service
+                predicates:
+                  - Path=/api/v1/crypto/**
+                  
+              - id: finance-service
+                uri: lb://finance-service
+                predicates:
+                  - Path=/api/v1/finance/**
+    application:
+        name: apigateway
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: ${JWT_ISSUER_URI:http://localhost:8989}
+        
 eureka:    
     client:
         serviceUrl:
-            defaultZone: http://localhost:8761/eureka/
+            defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: health,info,gateway
+    endpoint:
+        health:
+            show-details: never
+        gateway:
+            enabled: true
+                
