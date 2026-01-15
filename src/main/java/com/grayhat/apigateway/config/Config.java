@@ -13,6 +13,7 @@ public class Config {
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable).authorizeExchange(ex -> ex
                         .pathMatchers("/actuator/health","/actuator/info").permitAll()
+                        .pathMatchers("/api/v1/users/ping").permitAll()
                         .anyExchange().authenticated()
                 ).oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> {})).build();
     }
